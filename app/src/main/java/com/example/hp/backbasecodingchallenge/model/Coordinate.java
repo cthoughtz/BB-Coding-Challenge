@@ -35,4 +35,12 @@ public class Coordinate {
             throw new FormatException(je.getMessage());
         }
     }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
 }

@@ -39,7 +39,7 @@ public class Repository {
         return sInstance;
     }
 
-    public Set<City> getData() {
-        return mData;
+    public List<City> getData() {
+        return Utility.setToList(mData);
     }
 }

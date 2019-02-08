@@ -38,7 +38,7 @@ public class City implements Comparable<City>{
     public static City parse(JSONObject input) throws FormatException {
         try {
             String country = input.getString("country");
-            String name = input.getString("city");
+            String name = input.getString("name");
             int id = input.getInt("_id");
             Coordinate coordinate = Coordinate.parse(input.getJSONObject("coord"));
             return new City(country, name, id, coordinate);
@@ -52,5 +52,21 @@ public class City implements Comparable<City>{
     public int compareTo(City o) {
         int cmp = this.name.compareTo(o.name);
         return cmp == 0 ? this.country.compareTo(o.country) : cmp;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public Coordinate getCoordinate() {
+        return coordinate;
     }
 }

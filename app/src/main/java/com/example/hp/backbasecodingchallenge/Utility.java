@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class Utility {
     public static String readAssetFile(Context context, String filename) {
@@ -32,5 +33,13 @@ public class Utility {
             }
         }
         return null;
+    }
+
+    public static <T> List<T> setToList(Set<T> input) {
+        ArrayList<T> list = new ArrayList<T>(input.size());
+        for(T item: input) {
+            list.add(item);
+        }
+        return list;
     }
 }
