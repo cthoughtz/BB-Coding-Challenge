@@ -58,10 +58,10 @@ public class CityListFragment extends Fragment {
             City city = (City) v.getTag();
             Log.i("test", "city is "+city.getName());
 
-            //Start another fragment and show city on map.
+
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container,CityListFragment.getFragment());
+            fragmentTransaction.replace(R.id.fragment_container,CityLocationFragment.getFragment());
             fragmentTransaction.commit();
         }
     };
