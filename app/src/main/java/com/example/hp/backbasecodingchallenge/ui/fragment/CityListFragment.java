@@ -20,8 +20,17 @@ import android.widget.Toast;
 
 import com.example.hp.backbasecodingchallenge.R;
 import com.example.hp.backbasecodingchallenge.model.City;
+import com.example.hp.backbasecodingchallenge.model.Coordinate;
 import com.example.hp.backbasecodingchallenge.repository.Repository;
 import com.example.hp.backbasecodingchallenge.ui.adapter.CityListAdapter;
+import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.MapboxMapOptions;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.maps.SupportMapFragment;
 
 public class CityListFragment extends Fragment {
 
@@ -57,12 +66,34 @@ public class CityListFragment extends Fragment {
         public void onClick(View v) {
             City city = (City) v.getTag();
             Log.i("test", "city is "+city.getName());
+            Log.d("coords", "city is: "+city.getCoordinate().getLat()+ " "+ city.getCoordinate().getLon());
 
+            Mapbox.getInstance(getActivity(),"pk.eyJ1IjoiY3Rob3VnaHR6IiwiYSI6ImNqcnZuZGFhbjAzdzM0OW96cnN3cjRvMTIifQ.715lP84Vkxrkirfph_4rwg");
 
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container,CityLocationFragment.getFragment());
+            SupportMapFragment mapFragment;
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+
+            MapboxMapOptions options = new MapboxMapOptions();
+            options.camera(new CameraPosition.Builder()
+                    .target(new LatLng(city.getCoordinate().getLat(),city.getCoordinate().getLon()))
+                    .zoom(11)
+                    .build());
+
+            mapFragment = SupportMapFragment.newInstance(options);
+            fragmentTransaction.replace(R.id.fragment_container,mapFragment);
             fragmentTransaction.commit();
+
+            mapFragment.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(@NonNull MapboxMap mapboxMap) {
+                    mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
+                        @Override
+                        public void onStyleLoaded(@NonNull Style style) {
+
+                        }
+                    });
+                }
+            });
         }
     };
 
