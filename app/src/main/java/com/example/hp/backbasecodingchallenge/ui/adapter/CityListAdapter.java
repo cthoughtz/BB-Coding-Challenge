@@ -11,8 +11,13 @@ import android.widget.TextView;
 
 import com.example.hp.backbasecodingchallenge.model.City;
 
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.CityListItemViewHolder> implements Filterable {
 
@@ -23,7 +28,7 @@ public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.CityLi
 
     public CityListAdapter(List<City> data, View.OnClickListener onClickListener) {
         this.data = data;
-        this.filteredData = data;
+        this.filteredData =data;
         this.onClickListener = onClickListener;
         this.itemFilter = new ItemFilter(data);
     }
@@ -68,7 +73,7 @@ public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.CityLi
     public class ItemFilter extends Filter {
         List<City> list;
 
-        public ItemFilter(List<City> list) {
+        ItemFilter(List<City> list) {
             this.list = list;
         }
 
@@ -77,10 +82,28 @@ public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.CityLi
             FilterResults filterResults = new FilterResults();
             List<City> filteredList = new ArrayList<>();
 
-            String filterString = constraint.toString().toLowerCase();
-            for(City city : list) {
-                if(city.getName().toLowerCase().startsWith(filterString)) {
-                    filteredList.add(city);
+            String searchTerm = constraint.toString().toLowerCase();
+
+            int position = Collections.binarySearch(list, new City("", searchTerm, -1, null), new Comparator<Object>() {
+                @Override
+                public int compare(Object o1, Object o2) {
+                    if(o1 instanceof City && o2 instanceof City) {
+                        return ((City)o1).getName().compareToIgnoreCase(((City)o2).getName());
+                    }
+                    else {
+                        return -1;
+                    }
+                }
+            });
+            if (position < 0) {
+                position = -(position + 1);
+            }
+            for(int j = position; j < list.size(); j++) {
+                if(list.get(j).getName().toLowerCase().startsWith(searchTerm)) {
+                    filteredList.add(list.get(j));
+                }
+                else {
+                    break;
                 }
             }
 

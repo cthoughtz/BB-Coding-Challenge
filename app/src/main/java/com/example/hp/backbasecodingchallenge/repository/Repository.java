@@ -2,12 +2,10 @@ package com.example.hp.backbasecodingchallenge.repository;
 
 import android.content.Context;
 
-import com.example.hp.backbasecodingchallenge.Utility;
 import com.example.hp.backbasecodingchallenge.model.City;
 
-import org.json.JSONArray;
-
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -19,16 +17,19 @@ public class Repository {
     private Set<City> mData;
 
     private Repository(Context context){
-        String flattenCitiesJsonArray = Utility.readAssetFile(context, "cities.json");
-        mData = new TreeSet<>();
-        try {
-            JSONArray jsonArray  = new JSONArray(flattenCitiesJsonArray);
-            for(int i = 0; i < jsonArray.length();i++) {
-                mData.add(City.parse(jsonArray.getJSONObject(i)));
+        mData = new TreeSet<City>(new Comparator<City>() {
+            @Override
+            public int compare(City o1, City o2) {
+                int cmp =  o1.getName().compareTo(o2.getName());
+                if(cmp == 0) {
+                    cmp = (o1.getId() < o2.getId()) ? -1 : ((o1.getId() == o2.getId()) ? 0 : 1);
+                }
+                return cmp;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        });
+
+        CityJsonReader cityJsonReader = new CityJsonReader();
+        cityJsonReader.readJson(context, mData);
     }
 
     public static  Repository getInstance(Context context){
@@ -40,6 +41,6 @@ public class Repository {
     }
 
     public List<City> getData() {
-        return Utility.setToList(mData);
+        return new ArrayList<>(mData);
     }
 }

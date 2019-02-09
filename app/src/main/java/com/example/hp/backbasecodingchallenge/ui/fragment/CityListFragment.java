@@ -65,8 +65,6 @@ public class CityListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             City city = (City) v.getTag();
-            Log.i("test", "city is "+city.getName());
-            Log.d("coords", "city is: "+city.getCoordinate().getLat()+ " "+ city.getCoordinate().getLon());
 
             Mapbox.getInstance(getActivity(),"pk.eyJ1IjoiY3Rob3VnaHR6IiwiYSI6ImNqcnZuZGFhbjAzdzM0OW96cnN3cjRvMTIifQ.715lP84Vkxrkirfph_4rwg");
 
